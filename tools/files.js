@@ -496,6 +496,8 @@ _.extend(exports, {
       appVersion = globalVersion = 'checkout';
     }
 
+    // meteorReleaseContext - an option with information about app directory
+    // release versions, etc, is used to get exact Meteor version used.
     if (urlOrOptions.hasOwnProperty('meteorReleaseContext')) {
       // Get meteor app release version: if specified in command line args, take
       // releaseVersion, if not specified, try app version taken from .meteor
@@ -504,19 +506,18 @@ _.extend(exports, {
       appVersion = meteorReleaseContext.releaseVersion;
       globalVersion = meteorReleaseContext.appReleaseVersion;
 
-      console.log(meteorReleaseContext);
-
       if (globalVersion === 'none')
         globalVersion = 'checkout';
 
       if (appVersion === 'none')
         appVersion = globalVersion;
+
+      delete urlOrOptions.meteorReleaseContext;
     }
 
     // Get some kind of User Agent: environment information.
-    var ua = util.format('Meteor/%s (%s installed;) OS/%s (%s; %s; %s;)',
-              appVersion, globalVersion,
-              os.platform(), os.type(), os.release(), os.arch());
+    var ua = util.format('Meteor/%s OS/%s (%s; %s; %s;)',
+              appVersion, os.platform(), os.type(), os.release(), os.arch());
 
     var headers = {'User-Agent': ua };
 
